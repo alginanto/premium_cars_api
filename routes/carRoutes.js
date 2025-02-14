@@ -18,7 +18,7 @@ router.get('/allcars', authenticateToken, async (req, res) => {
     try {
       // Get page from query parameter or default to 1
       const page = parseInt(req.query.page) || 1;
-      const limit = 20; // Items per page
+      const limit = 2; // Items per page
       const skip = (page - 1) * limit;
   
       // Get total count of cars

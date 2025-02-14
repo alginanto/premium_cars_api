@@ -14,10 +14,13 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       name: req.body.name,
       location: req.body.location
-    });
+    });    
+    console.log('email', req.body.email);
+    console.log('name', req.body.name);
     console.log('hashedPassword', hashedPassword);
     await user.save();
-    res.status(201).json({ message: 'User created successfully' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.status(201).json({ message: 'User created successfully' ,token:token});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
