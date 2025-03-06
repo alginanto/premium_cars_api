@@ -3,7 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const os = require('os');
 const connectDB = require('./config/db');
-
+const fs = require('fs');
 dotenv.config();
 connectDB();
 
@@ -13,10 +13,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Ensure "uploads" folder exists before server starts
+const uploadDir = 'uploads';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('📁 "uploads" folder created.');
+}
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/cars', require('./routes/carRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(uploadDir));
 
 // Get local network IP address
 function getLocalIp() {
